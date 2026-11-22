@@ -26,3 +26,6 @@ env/
 # IDE configuration
 .idea/
 .vscode/
+
+# Licensed WRDS / OptionMetrics data
+data/
