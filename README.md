@@ -68,6 +68,38 @@ Two numerical root-finding methods are implemented:
 - Brent's method
 - Newton-Raphson using analytical Vega
 
+### Black-76 Pricing and Implied Volatility
+
+The project also implements the Black-76 model for
+European options, using forward prices and discount factors.
+
+For a European call:
+
+$$
+C = D(0,T)[F\Phi(d_1)-K\Phi(d_2)]
+$$
+
+where:
+
+$$
+d_1 = \frac{\ln(F/K)+\frac{1}{2}\sigma^2T}
+{\sigma\sqrt{T}},
+\qquad
+d_2 = d_1-\sigma\sqrt{T}
+$$
+
+Implied volatility is recovered numerically using
+Brent's root-finding algorithm.
+
+The implementation includes:
+
+- European call and put pricing.
+- Put-call parity validation.
+- Implied volatility inversion.
+- No-arbitrage price bounds.
+- Automated numerical and input validation tests.
+
+
 ## 3. Key Results
 
 ### Monte Carlo Convergence
@@ -99,6 +131,66 @@ Three synthetic volatility structures are investigated:
 Implied volatilities are recovered from synthetic option prices.
 
 Discrete monotonicity, convexity, and call-spread bounds are checked for the synthetic price grids.
+
+### Empirical SPX Options Analysis
+
+An additional empirical study investigates the implied
+volatility structure of S&P 500 index options using
+OptionMetrics IvyDB US data accessed through WRDS.
+
+The analysis focuses on an option cross-section observed
+on August 29, 2025.
+
+**Data preparation**
+
+- Filtering option quotes for liquidity and data quality.
+- Separating AM-settled and PM-settled contracts.
+- Matching European calls and puts by strike and maturity.
+- Selecting out-of-the-money options for volatility analysis.
+
+**Forward estimation and interest rates**
+
+- Estimating forward prices using put-call parity.
+- Examining sensitivity to the choice of near-ATM strikes.
+- Incorporating the OptionMetrics zero-coupon yield curve.
+- Comparing regression-implied discount factors with
+  independently sourced interest rates.
+
+**Implied volatility analysis**
+
+- Constructing empirical volatility skews across maturities.
+- Recovering implied volatility from market mid-prices
+  using Black-76 and Brent's method.
+- Comparing recovered volatilities with OptionMetrics estimates.
+- Investigating systematic differences across moneyness
+  and maturity.
+
+**Robustness and key findings**
+
+The observed volatility structure exhibits a negative
+equity skew, with pronounced maturity dependence.
+
+Forward estimates are relatively stable across alternative
+near-ATM estimation windows.
+
+Black-76 implied volatility estimates show relatively small
+but systematic differences from OptionMetrics estimates.
+These differences are investigated using alternative
+discount factors and liquidity filters.
+
+The empirical findings refer to a single observation date
+and should not be interpreted as evidence of time-series
+stability or predictive performance.
+
+**Data availability**
+
+The empirical notebook and underlying WRDS/OptionMetrics
+data are maintained privately and are not included in
+the public repository.
+
+The publicly available code focuses on reusable pricing
+models, numerical algorithms, and synthetic validation.
+
 
 ## 4. Selected Figures
 
@@ -161,7 +253,7 @@ python -m pytest tests/ -v
 
 ## 7. Testing
 
-The project currently includes 57 automated tests covering:
+The project currently includes 70 automated tests:
 
 - Black-Scholes pricing
 - Put-call parity
@@ -169,6 +261,9 @@ The project currently includes 57 automated tests covering:
 - Greeks
 - Implied volatility recovery
 - Boundary conditions and input validation
+- Black-76 pricing and put-call parity
+- Black-76 implied volatility recovery
+- Black-76 input validation and pricing bounds
 
 ## 8. Limitations and Future Extensions
 
