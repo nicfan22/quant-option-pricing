@@ -29,3 +29,6 @@ env/
 
 # Licensed WRDS / OptionMetrics data
 data/
+
+# WRDS empirical analysis (private)
+notebooks/05_market_data.ipynb
